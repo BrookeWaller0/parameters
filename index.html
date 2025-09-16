@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Photography Shoot Planner</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      padding: 20px;
+    }
+    h1 {
+      color: #333;
+    }
+    input, button, select {
+      padding: 8px;
+      margin: 5px 0;
+    }
+    #log {
+      margin-top: 20px;
+      padding: 10px;
+      background: #fff;
+      border: 1px solid #ccc;
+    }
+  </style>
+</head>
+<body>
+  <h1>Photography Shoot Planner</h1>
+
+  <label for="client">Client Name:</label>
+  <input type="text" id="client" placeholder="e.g. Smith Family"><br>
+
+  <label for="shootType">Shoot Type:</label>
+  <select id="shootType">
+    <option value="portrait">Portrait</option>
+    <option value="wedding">Wedding</option>
+    <option value="event">Event</option>
+    <option value="product">Product</option>
+  </select><br>
+
+  <label for="hours">Hours:</label>
+  <input type="number" id="hours" placeholder="e.g. 2"><br>
+
+  <label for="rate">Hourly Rate ($):</label>
+  <input type="number" id="rate" placeholder="e.g. 150"><br>
+
+  <button onclick="addShoot()">Add Shoot</button>
+
+  <div id="log"></div>
+
+  <script>
+    
+    const photographer = {
+      name: "Brooke Waller Photography",
+      shoots: [],
+      totalIncome: 0,
+      
+      
+      addShoot: function(shoot) {
+        this.shoots.push(shoot);
+        this.totalIncome += shoot.income;
+      }
+    };
+
+    
+    function calculateIncome(hours, rate) {
+      return hours * rate;
+    }
+
+    
+    function createShoot(client, type, hours, rate) {
+      let income = calculateIncome(hours, rate);
+      return {
+        client: client,
+        type: type,
+        hours: hours,
+        rate: rate,
+        income: income
+      };
+    }
+
+ 
+    function addShoot() {
+      let client = document.getElementById("client").value;
+      let type = document.getElementById("shootType").value;
+      let hours = parseInt(document.getElementById("hours").value);
+      let rate = parseFloat(document.getElementById("rate").value);
+
+      if (client && hours > 0 && rate > 0) {
+        let shoot = createShoot(client, type, hours, rate); 
+        photographer.addShoot(shoot); 
+        displayLog();
+      } else {
+        alert("Please enter valid input.");
+      }
+    }
+
+ 
+    function displayLog() {
+      let logDiv = document.getElementById("log");
+      logDiv.innerHTML = `<h3>${photographer.name} - Shoot Log</h3>`;
+      photographer.shoots.forEach(s => {
+        logDiv.innerHTML += `<p>${s.client} | ${s.type} | ${s.hours} hrs @ $${s.rate}/hr = <strong>$${s.income}</strong></p>`;
+      });
+      logDiv.innerHTML += `<strong>Total Income: $${photographer.totalIncome}</strong>`;
+    }
+  </script>
+</body>
+</html>
